@@ -8,7 +8,8 @@
     "start:prod": "NODE_ENV=production nodemon server.js",
     "debug": "ndb server.js",
      "watch:js": "npx parcel watch ./public/js/index.js --dist-dir ./public/js",
-    "build:js": "npx parcel build ./public/js/index.js --dist-dir ./public/js"
+    "build:js": "npx parcel build ./public/js/index.js --dist-dir ./public/js",
+    "install": "npm install"
   },
   "author": "",
   "license": "ISC",
