@@ -23,7 +23,7 @@ const handleDuplicateFieldsDB = (err) => {
     // to get an array of values from keyValue and then joins them into a single string separated by commas if there are multiple values.
     value = Object.values(err.keyValue).join(', ');
   }
-  console.log(value);
+  // console.log(value);
 
   const message = `Duplicate field value: ${value}. Please use another value!`;
   return new AppError(message, 400);

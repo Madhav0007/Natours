@@ -14,9 +14,9 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression=require('compression');
 
 // start express app
-
 const app = express();
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -127,14 +127,14 @@ app.use(
   }),
 );
 
+app.use(compression())
+
 // TEST MIDDLEWARE
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   // console.log(req.cookies);
   next();
 });
-
-// 2- ROUTE HANDLERS
 
 // 3 ROUTES
 
