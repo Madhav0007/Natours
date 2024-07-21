@@ -1,6 +1,13 @@
 const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controllers/errorController');
 const tourRouter = require('./routes/tourRoutes');
@@ -8,13 +15,6 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 const viewRouter = require('./routes/viewRoutes');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const hpp = require('hpp');
-const cookieParser = require('cookie-parser');
-const compression=require('compression');
 
 // start express app
 const app = express();
@@ -34,17 +34,40 @@ app.use(express.static(path.join(__dirname, 'public')));
 //     contentSecurityPolicy: {
 //       directives: {
 //         defaultSrc: ["'self'"],
-//         scriptSrc: ["'self'", "https://api.mapbox.com"],
-//         styleSrc: ["'self'", "'unsafe-inline'", "https://api.mapbox.com"],
-//         imgSrc: ["'self'", "data:", "https://api.mapbox.com"],
-//         connectSrc: ["'self'", "https://api.mapbox.com", "https://events.mapbox.com"],
-//         fontSrc: ["'self'", "https://fonts.googleapis.com", "https://fonts.gstatic.com", "chrome-extension:"],
-//         workerSrc: ["'self'", "blob:"],
+//         // scriptSrc: ["'self'", "https://api.mapbox.com"],
+//         scriptSrc: [
+//           "'self'",
+//           'https://api.mapbox.com',
+//           'https://cdnjs.cloudflare.com',
+//           'https://js.stripe.com',
+//           "'unsafe-inline'",
+//         ],
+//         // scriptSrc: ["'self'", "https://api.mapbox.com", "'unsafe-inline'"],
+//         styleSrc: [
+//           "'self'",
+//           "'unsafe-inline'",
+//           'https://api.mapbox.com',
+//           'https://fonts.googleapis.com',
+//         ],
+//         imgSrc: ["'self'", 'data:', 'https://api.mapbox.com', 'blob:'],
+//         connectSrc: [
+//           "'self'",
+//           'https://api.mapbox.com',
+//           'https://events.mapbox.com',
+//           'ws://127.0.0.1:6406',
+//         ],
+//         fontSrc: [
+//           "'self'",
+//           'https://fonts.googleapis.com',
+//           'https://fonts.gstatic.com',
+//         ],
+//         frameSrc: ["'self'", 'https://js.stripe.com'],
+//         workerSrc: ["'self'", 'blob:'],
 //         objectSrc: ["'none'"],
 //         upgradeInsecureRequests: [],
 //       },
 //     },
-//   })
+//   }),
 // );
 
 app.use(
@@ -52,40 +75,38 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        // scriptSrc: ["'self'", "https://api.mapbox.com"],
         scriptSrc: [
           "'self'",
           'https://api.mapbox.com',
           'https://cdnjs.cloudflare.com',
           'https://js.stripe.com',
-          "'unsafe-inline'",
+          "'unsafe-inline'"
         ],
-        // scriptSrc: ["'self'", "https://api.mapbox.com", "'unsafe-inline'"],
         styleSrc: [
           "'self'",
           "'unsafe-inline'",
           'https://api.mapbox.com',
-          'https://fonts.googleapis.com',
+          'https://fonts.googleapis.com'
         ],
         imgSrc: ["'self'", 'data:', 'https://api.mapbox.com', 'blob:'],
         connectSrc: [
           "'self'",
           'https://api.mapbox.com',
           'https://events.mapbox.com',
-          'ws://127.0.0.1:6406',
+          'ws://127.0.0.1:6406'
         ],
         fontSrc: [
           "'self'",
           'https://fonts.googleapis.com',
-          'https://fonts.gstatic.com',
+          'https://fonts.gstatic.com'
         ],
         frameSrc: ["'self'", 'https://js.stripe.com'],
         workerSrc: ["'self'", 'blob:'],
         objectSrc: ["'none'"],
-        upgradeInsecureRequests: [],
-      },
-    },
-  }),
+        upgradeInsecureRequests: true // Correct value
+      }
+    }
+  })
 );
 
 // DEVELOPMENT LOGGING
@@ -98,7 +119,7 @@ const limiter = rateLimit({
   // maximum 100 request can be send from same IP
   max: 100,
   windowMs: 60 * 60 * 1000,
-  message: 'too many requests from this IP , please try again later ',
+  message: 'too many requests from this IP , please try again later '
 });
 app.use('/api', limiter);
 
@@ -122,12 +143,12 @@ app.use(
       'ratingsAverage',
       'maxGroupSize',
       'difficulty',
-      'price',
-    ],
-  }),
+      'price'
+    ]
+  })
 );
 
-app.use(compression())
+app.use(compression());
 
 // TEST MIDDLEWARE
 app.use((req, res, next) => {

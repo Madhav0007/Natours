@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { showAlert } from './alerts';
-const stripe = Stripe('pk_test_51Pc3ZlK4EnO28QBVYBRgSx5MZa7C7nQeYSXYJWvvFuzWkh73f3NE8PIDihlT1yxAg8DTvAK1w7JZC3fOUkgarsht00wDJyupFE');
+const stripe = Stripe(
+  'pk_test_51Pc3ZlK4EnO28QBVYBRgSx5MZa7C7nQeYSXYJWvvFuzWkh73f3NE8PIDihlT1yxAg8DTvAK1w7JZC3fOUkgarsht00wDJyupFE'
+);
 
 export const bookTour = async tourId => {
   try {
     // 1) Get checkout session from API
-    const session = await axios(
-      `/api/v1/bookings/checkout-session/${tourId}`
-    );
+    const session = await axios(`/api/v1/bookings/checkout-session/${tourId}`);
     // console.log(session);
     // NAVU
     if (!session.data || !session.data.session) {

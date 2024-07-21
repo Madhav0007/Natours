@@ -15,11 +15,11 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email']
   },
-  photo: {type:String,default:'default.jpg'},
+  photo: { type: String, default: 'default.jpg' },
   role: {
     type: String,
     enum: ['user', 'guide', 'lead-guide', 'admin'],
-    default: 'user',
+    default: 'user'
   },
   password: {
     type: String,
@@ -38,7 +38,7 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!'
     }
   },
-  passwordChangedAt:Date,
+  passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
   active: {
@@ -49,11 +49,13 @@ const userSchema = new mongoose.Schema({
 });
 
 // navu
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password') || this.isNew) { // Only run if password or new user
-      if (this.body && this.body.role) { // Check for role in request body
-          this.role = this.body.role;
-      }
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password') || this.isNew) {
+    // Only run if password or new user
+    if (this.body && this.body.role) {
+      // Check for role in request body
+      this.role = this.body.role;
+    }
   }
   next();
 });
@@ -92,12 +94,12 @@ userSchema.methods.correctPassword = async function(
 
 userSchema.methods.changedPasswordAfter = function(JWTTimestamp) {
   if (this.passwordChangedAt) {
-    console.log(this.passwordChangedAt,JWTTimestamp);
+    console.log(this.passwordChangedAt, JWTTimestamp);
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
       10
     );
- 
+
     return JWTTimestamp < changedTimestamp;
   }
 
@@ -118,7 +120,6 @@ userSchema.methods.createPasswordResetToken = function() {
 
   return resetToken;
 };
-
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
