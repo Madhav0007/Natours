@@ -19,12 +19,13 @@ const viewRouter = require('./routes/viewRoutes');
 // start express app
 const app = express();
 app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'views'));
-
+// app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '../frontend/views'));
 // 1 GLOBAL MIDDLEWARES
 // SERVING STATIC FILES
 // app.use(express.static(`${__dirname}/starter/public`));
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 
 //  SECURITY HTTP HEADER
 // app.use(helmet());
