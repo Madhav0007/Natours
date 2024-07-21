@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "scripts": {
       "build:js": "parcel build public/js/index.js --out-dir public/js --out-file bundle.js",
-      "build": "npm run build:js"
+      "build:frontend": "npm run build:js"
     },
     "devDependencies": {
       "parcel-bundler": "^1.12.3"
